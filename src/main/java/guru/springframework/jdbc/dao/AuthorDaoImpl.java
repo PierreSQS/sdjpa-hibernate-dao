@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorDaoImpl implements AuthorDao {
     public static final String AUTHOR_BY_FIRST_NAME_AND_LAST_NAME =
-            "SELECT a FROM author a WHERE a.firstName = :first_name AND a.lastName = :last_name";
+            "SELECT a FROM Author a WHERE a.firstName = :first_name AND a.lastName = :last_name";
     private final EntityManagerFactory emf;
 
     public AuthorDaoImpl(EntityManagerFactory emf) {
