@@ -4,12 +4,12 @@ import guru.springframework.jdbc.domain.Author;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by jt on 8/28/21.
+ * Modified by Pierrot on 7/18/22.
  */
 @Component
 public class AuthorDaoImpl implements AuthorDao {
     @Override
-    public Author getById(Long id) {
+    public Author findAuthorById(Long id) {
         return null;
     }
 

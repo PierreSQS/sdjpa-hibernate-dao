@@ -3,10 +3,10 @@ package guru.springframework.jdbc.dao;
 import guru.springframework.jdbc.domain.Author;
 
 /**
- * Created by jt on 8/22/21.
+ * Modified by Pierrot on 7/18/22.
  */
 public interface AuthorDao {
-    Author getById(Long id);
+    Author findAuthorById(Long id);
 
     Author findAuthorByName(String firstName, String lastName);
 
