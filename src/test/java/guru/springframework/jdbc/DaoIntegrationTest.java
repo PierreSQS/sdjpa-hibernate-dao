@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DataJpaTest
 @Import(AuthorDaoImpl.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class DaoIntegrationTest {
+class DaoIntegrationTest {
     @Autowired
     AuthorDao authorDao;
 
@@ -60,8 +60,8 @@ public class DaoIntegrationTest {
 
         assertThat(updated.getLastName()).isEqualTo("Thompson");
 
-        System.out.printf("%n###### the updated author name: %s %s ######%n%n"
-                , updated.getFirstName(), updated.getLastName());
+        System.out.printf("%n###### the updated author name: %s %s -ID: %d ######%n%n"
+                , updated.getFirstName(), updated.getLastName(),updated.getId());
     }
 
     @Test
