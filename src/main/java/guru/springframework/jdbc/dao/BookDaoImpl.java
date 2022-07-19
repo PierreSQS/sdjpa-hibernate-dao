@@ -15,10 +15,26 @@ public class BookDaoImpl implements BookDao {
     public static final String BOOK_BY_TITLE =
             "SELECT b FROM Book b WHERE b.title = :title";
 
+    public static final String BOOK_BY_ISNB =
+            "SELECT b FROM Book b WHERE b.isbn = :isbn";
+
     private final EntityManagerFactory emf;
 
     public BookDaoImpl(EntityManagerFactory emf) {
         this.emf = emf;
+    }
+
+    @Override
+    public Book findByISBN(String isbn) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Book> typedQuery = em.createQuery(BOOK_BY_ISNB,Book.class);
+            typedQuery.setParameter("isbn",isbn);
+            return typedQuery.getSingleResult();
+        } finally {
+            em.close();
+        }
+
     }
 
     @Override
