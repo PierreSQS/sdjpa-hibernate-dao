@@ -11,8 +11,6 @@ import java.util.List;
  */
 @Component
 public class AuthorDaoImpl implements AuthorDao {
-    public static final String AUTHOR_BY_FIRST_NAME_AND_LAST_NAME =
-            "SELECT a FROM Author a WHERE a.firstName = :first_name AND a.lastName = :last_name";
 
     public static final String ALL_AUTHORS_BY_LAST_NAME =
             "SELECT a FROM Author a WHERE a.lastName LIKE :last_name";
@@ -60,8 +58,7 @@ public class AuthorDaoImpl implements AuthorDao {
         EntityManager em = getEntityManager();
 
         try {
-            TypedQuery<Author> typedQuery = em.createQuery(
-                    AUTHOR_BY_FIRST_NAME_AND_LAST_NAME,Author.class);
+            TypedQuery<Author> typedQuery = em.createNamedQuery("find_by_name",Author.class);
             typedQuery.setParameter("first_name",firstName);
             typedQuery.setParameter("last_name",lastName);
             return typedQuery.getSingleResult();
