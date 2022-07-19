@@ -33,6 +33,19 @@ class DaoIntegrationTest {
     BookDao bookDao;
 
     @Test
+    void testFindAllAuthors() {
+        List<Author> authors = authorDao.findAll();
+
+        assertThat(authors)
+                .isNotNull()
+                .isNotEmpty();
+
+        System.out.printf("%n###### all authors in test ######%n");
+        authors.forEach(author -> System.out.println(author.getFirstName()+" "+author.getLastName()));
+        System.out.println();
+    }
+
+    @Test
     void testFindBookByISBN() {
         Book book = new Book();
         book.setIsbn("1234" + RandomString.make());
