@@ -4,7 +4,6 @@ import guru.springframework.jdbc.dao.AuthorDao;
 import guru.springframework.jdbc.dao.BookDao;
 import guru.springframework.jdbc.domain.Author;
 import guru.springframework.jdbc.domain.Book;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.internal.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,9 +98,9 @@ class DaoIntegrationTest {
         Book saved = bookDao.saveNewBook(book);
 
         saved.setTitle("New Book");
-        bookDao.updateBook(saved);
+        Book updatedBook = bookDao.updateBook(saved);
 
-        Book fetched = bookDao.findBookById(saved.getId());
+        Book fetched = bookDao.findBookById(updatedBook.getId());
 
         assertThat(fetched.getTitle()).isEqualTo("New Book");
     }
@@ -194,6 +193,33 @@ class DaoIntegrationTest {
     }
 
     @Test
+    void testFindAllBooks() {
+        List<Book> books = bookDao.findAll();
+        assertThat(books)
+                .isNotEmpty().
+                isNotNull();
+
+        System.out.printf("%n###### following the authors in test ######%n");
+        books.forEach(book -> System.out.println(book.getTitle()+", "+book.getPublisher()));
+        System.out.println();
+
+    }
+
+    @Test
+    void testFindBookByTitle() {
+        Book book = new Book();
+        book.setIsbn("1235" + net.bytebuddy.utility.RandomString.make());
+        book.setTitle("TITLE TEST2");
+
+        Book saved = bookDao.saveNewBook(book);
+
+        Book fetched = bookDao.findBookByTitle(book.getTitle());
+        assertThat(fetched).isNotNull();
+
+        bookDao.deleteBookById(saved.getId());
+    }
+
+    @Test
     void testGetAuthorByName() {
         Author author = authorDao.findAuthorByName("Craig", "Walls");
 
@@ -209,10 +235,4 @@ class DaoIntegrationTest {
 
     }
 
-//
-//    @Test
-//    void testGetBookByTitleBookNotFound() {
-//        assertThrows(EmptyResultDataAccessException.class,
-//                () -> bookDao.findBookByTitle("Spring in Action, 6t Edition"));
-//    }
 }
