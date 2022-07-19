@@ -1,10 +1,12 @@
 package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Book;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Pierrot on 7/18/22.
  */
+@Component
 public class BookDaoImpl implements BookDao{
     @Override
     public Book findBookById(Long id) {
