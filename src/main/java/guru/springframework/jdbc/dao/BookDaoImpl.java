@@ -46,10 +46,12 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Book updateBook(Book book) {
         EntityManager em = getEntityManager();
-        em.joinTransaction();
+        em.getTransaction().begin();
         em.merge(book);
         em.flush();
         em.clear();
+        em.getTransaction().commit();
+        em.close();
         return book;
     }
 
