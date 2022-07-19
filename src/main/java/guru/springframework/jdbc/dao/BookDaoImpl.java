@@ -44,43 +44,61 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book findBookByTitle(String title) {
-        TypedQuery<Book> typedQuery = getEntityManager().createQuery(BOOK_BY_TITLE,Book.class);
-        typedQuery.setParameter("title",title);
-        return typedQuery.getSingleResult();
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Book> typedQuery = getEntityManager().createQuery(BOOK_BY_TITLE,Book.class);
+            typedQuery.setParameter("title",title);
+            return typedQuery.getSingleResult();
+        } finally {
+            em.close();
+        }
+
     }
 
     @Override
     public Book saveNewBook(Book book) {
         EntityManager em = getEntityManager();
-        em.getTransaction().begin();
-        em.persist(book);
-        em.flush();
-        em.getTransaction().commit();
-        return book;
+        try {
+            em.getTransaction().begin();
+            em.persist(book);
+            em.flush();
+            em.getTransaction().commit();
+            return book;
+        } finally {
+            em.close();
+        }
+
     }
 
     @Override
     public Book updateBook(Book book) {
         EntityManager em = getEntityManager();
-        em.getTransaction().begin();
-        em.merge(book);
-        em.flush();
-        em.clear();
-        em.getTransaction().commit();
-        em.close();
-        return book;
+        try {
+            em.getTransaction().begin();
+            em.merge(book);
+            em.flush();
+            em.clear();
+            em.getTransaction().commit();
+            return book;
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public void deleteBookById(Long id) {
         EntityManager em = getEntityManager();
-        Book foundBook = em.find(Book.class, id);
-        em.getTransaction().begin();
-        if (foundBook != null){
-            em.remove(foundBook);
-            em.flush();
+        try {
+            Book foundBook = em.find(Book.class, id);
+            em.getTransaction().begin();
+            if (foundBook != null){
+                em.remove(foundBook);
+                em.flush();
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
         }
-        em.getTransaction().commit();
 
     }
 
