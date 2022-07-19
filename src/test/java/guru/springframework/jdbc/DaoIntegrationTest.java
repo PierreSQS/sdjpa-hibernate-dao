@@ -37,10 +37,12 @@ class DaoIntegrationTest {
         Author saved = authorDao.saveNewAuthor(author);
         Long id = saved.getId();
 
-        authorDao.deleteAuthorById(saved.getId());
+        authorDao.deleteAuthorById(id);
+        Author deleted = authorDao.findAuthorById(id);
 
-        assertThrows(EmptyResultDataAccessException.class,
-                () -> authorDao.findAuthorById(id));
+        assertThat(deleted).isNull();
+        // Check that the Author is effectively deleted from the DB
+        assertThat(authorDao.findAuthorById(id)).isNull();
 
     }
 
