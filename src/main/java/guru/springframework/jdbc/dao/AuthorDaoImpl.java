@@ -27,7 +27,7 @@ public class AuthorDaoImpl implements AuthorDao {
     public List<Author> findAll() {
         EntityManager em = getEntityManager();
         try {
-            TypedQuery typedQuery = em.createNamedQuery("author_find_all",Author.class);
+            TypedQuery<Author> typedQuery = em.createNamedQuery("author_find_all",Author.class);
             return typedQuery.getResultList();
         } finally {
             em.close();
@@ -39,7 +39,7 @@ public class AuthorDaoImpl implements AuthorDao {
     public List<Author> listAuthorByLastNameLike(String lastName) {
         EntityManager em = emf.createEntityManager();
         try {
-           Query query = em.createQuery(ALL_AUTHORS_BY_LAST_NAME);
+           TypedQuery<Author> query = em.createQuery(ALL_AUTHORS_BY_LAST_NAME, Author.class);
            query.setParameter("last_name",lastName+"%");
            return query.getResultList();
         } finally {
