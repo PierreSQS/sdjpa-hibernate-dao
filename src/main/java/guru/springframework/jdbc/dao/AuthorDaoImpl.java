@@ -21,15 +21,20 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author findAuthorById(Long id) {
-        return getEntityManager().find(Author.class,id);
+        EntityManager em = getEntityManager();
+        Author foundAuthor = em.find(Author.class, id);
+        em.close();
+        return foundAuthor;
     }
 
     @Override
     public Author findAuthorByName(String firstName, String lastName) {
-        TypedQuery<Author> typedQuery = getEntityManager().createQuery(
+        EntityManager em = getEntityManager();
+        TypedQuery<Author> typedQuery = em.createQuery(
                 AUTHOR_BY_FIRST_NAME_AND_LAST_NAME,Author.class);
         typedQuery.setParameter("first_name",firstName);
         typedQuery.setParameter("last_name",lastName);
+        em.close();
         return typedQuery.getSingleResult();
     }
 
@@ -40,6 +45,7 @@ public class AuthorDaoImpl implements AuthorDao {
         em.persist(author);
         em.flush();
         em.getTransaction().commit();
+        em.close();
         return author;
     }
 
@@ -50,6 +56,7 @@ public class AuthorDaoImpl implements AuthorDao {
         em.merge(author);
         em.flush();
         em.clear();
+        em.close();
         return author;
     }
 
@@ -61,7 +68,7 @@ public class AuthorDaoImpl implements AuthorDao {
         em.remove(author);
         em.flush();
         em.getTransaction().commit();
-
+        em.close();
     }
 
     private EntityManager getEntityManager() {
