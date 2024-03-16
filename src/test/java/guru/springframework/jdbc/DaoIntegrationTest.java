@@ -54,7 +54,7 @@ class DaoIntegrationTest {
         book.setIsbn("1234" + RandomString.make());
         book.setTitle("ISBN TEST");
 
-        Book saved = bookDao.saveNewBook(book);
+        bookDao.saveNewBook(book);
 
         Book fetched = bookDao.findByISBN(book.getIsbn());
         assertThat(fetched).isNotNull();
@@ -227,14 +227,24 @@ class DaoIntegrationTest {
     void testGetAuthorByNameCriteria() {
         Author author = authorDao.findAuthorByNameCriteria("Craig", "Walls");
 
-        assertThat(author).isNotNull();
+        assertThat(author.getFirstName())
+                .isEqualTo("Craig");
+        assertThat(author.getLastName())
+                .isEqualTo("Walls");
+
+
     }
 
     @Test
     void testGetAuthorByName() {
         Author author = authorDao.findAuthorByName("Craig", "Walls");
 
-        assertThat(author).isNotNull();
+
+        assertThat(author.getFirstName())
+                .isEqualTo("Craig");
+        assertThat(author.getLastName())
+                .isEqualTo("Walls");
+
         System.out.printf("%n###### the found author name: %s ######%n%n", author.getLastName());
     }
 
