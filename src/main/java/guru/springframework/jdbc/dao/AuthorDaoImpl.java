@@ -2,54 +2,48 @@ package guru.springframework.jdbc.dao;
 
 import guru.springframework.jdbc.domain.Author;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Modified by Pierrot on 7/18/22.
+ * Modified by Pierrot on 11/28/24.
  */
 @Component
 public class AuthorDaoImpl implements AuthorDao {
     public static final String AUTHOR_BY_FIRST_NAME_AND_LAST_NAME =
             "SELECT a FROM Author a WHERE a.firstName = :first_name AND a.lastName = :last_name";
-    private final EntityManagerFactory emf;
+    private final EntityManager em;
 
-    public AuthorDaoImpl(EntityManagerFactory emf) {
-        this.emf = emf;
+    public AuthorDaoImpl(EntityManager em) {
+        this.em = em;
     }
 
     @Override
     public Author findAuthorById(Long id) {
-        return getEntityManager().find(Author.class,id);
+        return em.find(Author.class,id);
     }
 
     @Override
     public Author findAuthorByName(String firstName, String lastName) {
-        TypedQuery<Author> typedQuery = getEntityManager().createQuery(
+        TypedQuery<Author> typedQuery = em.createQuery(
                 AUTHOR_BY_FIRST_NAME_AND_LAST_NAME,Author.class);
         typedQuery.setParameter("first_name",firstName);
         typedQuery.setParameter("last_name",lastName);
         return typedQuery.getSingleResult();
     }
 
+    @Transactional
     @Override
     public Author saveNewAuthor(Author author) {
-        EntityManager em = getEntityManager();
-        em.getTransaction().begin();
         em.persist(author);
-        em.flush();
-        em.getTransaction().commit();
         return author;
     }
 
+    @Transactional
     @Override
     public Author updateAuthor(Author author) {
-        EntityManager em = getEntityManager();
-        em.joinTransaction();
         em.merge(author);
-        em.flush();
-        em.clear();
         return author;
     }
 
@@ -58,7 +52,4 @@ public class AuthorDaoImpl implements AuthorDao {
 
     }
 
-    private EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
 }
