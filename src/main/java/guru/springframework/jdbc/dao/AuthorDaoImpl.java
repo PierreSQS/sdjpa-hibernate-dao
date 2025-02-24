@@ -7,6 +7,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Modified by Pierrot on 24-02-2025.
  */
@@ -17,6 +19,13 @@ public class AuthorDaoImpl implements AuthorDao {
 
     public AuthorDaoImpl(EntityManager em) {
         this.em = em;
+    }
+
+    @Override
+    public List<Author> listAuthorByLastNameLike(String lastName) {
+        TypedQuery<Author> query = em.createQuery("SELECT a FROM Author a WHERE a.lastName LIKE :last_name", Author.class);
+        query.setParameter("last_name", "%" + lastName + "%");
+        return query.getResultList();
     }
 
     @Override

@@ -30,6 +30,13 @@ class DaoIntegrationTest {
     BookDao bookDao;
 
     @Test
+    void testListAuthorByLastNameLike() {
+        Author author = authorDao.listAuthorByLastNameLike("Walls").getFirst();
+
+        assertThat(author).isNotNull();
+    }
+
+    @Test
     void testDeleteBook() {
         Book book = new Book();
         book.setIsbn("1234");
