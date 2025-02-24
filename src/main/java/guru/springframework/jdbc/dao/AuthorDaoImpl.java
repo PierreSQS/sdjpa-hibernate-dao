@@ -38,36 +38,30 @@ public class AuthorDaoImpl implements AuthorDao {
         return author;
     }
 
+    @Transactional
     @Override
     public Author saveNewAuthor(Author author) {
-        em.getTransaction().begin();
         em.persist(author);
-        em.flush();
-        em.getTransaction().commit();
         em.close();
         return author;
     }
 
+    @Transactional
     @Override
     public Author updateAuthor(Author author) {
         try {
-            em.joinTransaction();
             em.merge(author);
-            em.flush();
-            em.clear();
             return em.find(Author.class, author.getId());
         } finally {
             em.close();
         }
     }
 
+    @Transactional
     @Override
     public void deleteAuthorById(Long id) {
-        em.getTransaction().begin();
         Author author = em.find(Author.class, id);
         em.remove(author);
-        em.flush();
-        em.getTransaction().commit();
         em.close();
     }
 
