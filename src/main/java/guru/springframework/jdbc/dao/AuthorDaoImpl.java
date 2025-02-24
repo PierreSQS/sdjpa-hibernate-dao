@@ -4,32 +4,30 @@ import guru.springframework.jdbc.domain.Author;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Created by jt on 8/28/21.
+ * Modified by Pierrot on 24-02-2025.
  */
 @Component
 public class AuthorDaoImpl implements AuthorDao {
 
-    private final EntityManagerFactory emf;
+    private final EntityManager em;
 
-    public AuthorDaoImpl(EntityManagerFactory emf) {
-        this.emf = emf;
+    public AuthorDaoImpl(EntityManager em) {
+        this.em = em;
     }
 
     @Override
     public Author getById(Long id) {
-        EntityManager em = getEntityManager();
-        Author author = getEntityManager().find(Author.class, id);
+        Author author = em.find(Author.class, id);
         em.close();
         return author;
     }
 
     @Override
     public Author findAuthorByName(String firstName, String lastName) {
-        EntityManager em = getEntityManager();
         TypedQuery<Author> query = em.createQuery("SELECT a FROM Author a " +
                 "WHERE a.firstName = :first_name and a.lastName = :last_name", Author.class);
         query.setParameter("first_name", firstName);
@@ -42,7 +40,6 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author saveNewAuthor(Author author) {
-        EntityManager em = getEntityManager();
         em.getTransaction().begin();
         em.persist(author);
         em.flush();
@@ -53,15 +50,12 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author updateAuthor(Author author) {
-        EntityManager em = getEntityManager();
-
         try {
             em.joinTransaction();
             em.merge(author);
             em.flush();
             em.clear();
-            Author saveAuthor = em.find(Author.class, author.getId());
-            return saveAuthor;
+            return em.find(Author.class, author.getId());
         } finally {
             em.close();
         }
@@ -69,7 +63,6 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public void deleteAuthorById(Long id) {
-        EntityManager em = getEntityManager();
         em.getTransaction().begin();
         Author author = em.find(Author.class, id);
         em.remove(author);
@@ -78,9 +71,6 @@ public class AuthorDaoImpl implements AuthorDao {
         em.close();
     }
 
-    private EntityManager getEntityManager(){
-        return emf.createEntityManager();
-    }
 }
 
 
