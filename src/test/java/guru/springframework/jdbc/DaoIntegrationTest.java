@@ -11,19 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 /**
- * Created by jt on 8/28/21.
+ * Modified by Pierrot on 24-02-2025.
  */
 @ActiveProfiles("local")
 @DataJpaTest
 @Import({AuthorDaoImpl.class, BookDaoImpl.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class DaoIntegrationTest {
+class DaoIntegrationTest {
     @Autowired
     AuthorDao authorDao;
 
@@ -110,7 +109,7 @@ public class DaoIntegrationTest {
         Author deleted = authorDao.getById(saved.getId());
         assertThat(deleted).isNull();
 
-        assertThat(authorDao.getById(saved.getId()));
+        assertThat(authorDao.getById(saved.getId())).isNull();
 
     }
 
