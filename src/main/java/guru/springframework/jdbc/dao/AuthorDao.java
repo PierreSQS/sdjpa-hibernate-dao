@@ -5,9 +5,11 @@ import guru.springframework.jdbc.domain.Author;
 import java.util.List;
 
 /**
- * Modified by Pierrot on 24-02-2025.
+ * Modified by Pierrot on 25-02-2025.
  */
 public interface AuthorDao {
+    List<Author> findAll();
+
     List<Author> listAuthorByLastNameLike(String lastName);
 
     Author getById(Long id);
