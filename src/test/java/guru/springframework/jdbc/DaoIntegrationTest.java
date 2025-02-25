@@ -72,6 +72,8 @@ class DaoIntegrationTest {
         Author saved = authorDao.saveNewAuthor(author);
 
         assertThat(saved).isNotNull();
+        assertThat(saved.getId()).isNotNull();
+
         System.out.printf("%n###### the saved author name: %s %s ######%n%n"
                 , author.getFirstName(), author.getLastName());
     }
