@@ -8,7 +8,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 
 /**
- * Created by jt on 8/29/21.
+ * Modified by Pierrot on 25-02-2025.
  */
 @Component
 public class BookDaoImpl implements BookDao {
@@ -19,12 +19,27 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
+    public Book findByISBN(String isbn) {
+        // Get EntityManager
+        EntityManager em = getEntityManager();
+
+        // Create the query
+        TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b where b.isbn = :isbn", Book.class);
+        query.setParameter("isbn", isbn);
+
+        // Execute query, get result and return it
+        return query.getSingleResult();
+    }
+
+    @Override
     public Book getById(Long id) {
         EntityManager em = getEntityManager();
         Book book = getEntityManager().find(Book.class, id);
         em.close();
         return book;
     }
+
+
 
     @Override
     public Book findBookByTitle(String title) {
