@@ -59,6 +59,13 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public void deleteAuthorById(Long id) {
+        // Get EntityManager
+        EntityManager entityManager = getEntityManager();
+
+        // Delete the Author
+        entityManager.getTransaction().begin();
+        entityManager.remove(entityManager.find(Author.class, id));
+        entityManager.getTransaction().commit();
 
     }
 
