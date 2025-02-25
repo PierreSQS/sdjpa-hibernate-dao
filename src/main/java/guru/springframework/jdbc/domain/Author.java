@@ -8,7 +8,7 @@ import jakarta.persistence.NamedQuery;
 
 @NamedQuery(name = "author-find-all", query = "SELECT a FROM Author a")
 @NamedQuery(name = "author-find-by-name",
-        query = "SELECT a FROM Author a WHERE a.firstName = :firstName AND a.lastName = :lastName")
+        query = "SELECT a FROM Author a WHERE a.firstName = :first_name AND a.lastName = :last_name")
 @Entity
 public class Author {
 
