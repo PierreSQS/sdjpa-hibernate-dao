@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DataJpaTest
 @Import(AuthorDaoImpl.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class DaoIntegrationTest {
+class DaoIntegrationTest {
     @Autowired
     AuthorDao authorDao;
 
@@ -92,16 +92,4 @@ public class DaoIntegrationTest {
 
     }
 
-//    @Test
-//    void testGetBookByTitle() {
-//        Book foundBook = bookDao.findBookByTitle("Spring in Action, 6th Edition");
-//        assertThat(foundBook).isNotNull();
-//        System.out.printf("%n###### the found Book name: %s ######%n%n", foundBook.getTitle());
-//    }
-//
-//    @Test
-//    void testGetBookByTitleBookNotFound() {
-//        assertThrows(EmptyResultDataAccessException.class,
-//                () -> bookDao.findBookByTitle("Spring in Action, 6t Edition"));
-//    }
 }
