@@ -3,6 +3,9 @@ package guru.springframework.jdbc.dao;
 import guru.springframework.jdbc.domain.Author;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityManager;
@@ -56,6 +59,22 @@ public class AuthorDaoImpl implements AuthorDao {
         query.setParameter("first_name", firstName);
         query.setParameter("last_name", lastName);
 
+        Author author = query.getSingleResult();
+        em.close();
+        return author;
+    }
+
+    @Override
+    public Author findAuthorByNameCriteria(String firstName, String lastName) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Author> cq = cb.createQuery(Author.class);
+        Root<Author> authorRoot = cq.from(Author.class);
+        cq.select(authorRoot)
+                .where(cb.equal(authorRoot.get("firstName"), firstName),
+                        cb.equal(authorRoot.get("lastName"), lastName));
+
+        TypedQuery<Author> query = em.createQuery(cq);
         Author author = query.getSingleResult();
         em.close();
         return author;

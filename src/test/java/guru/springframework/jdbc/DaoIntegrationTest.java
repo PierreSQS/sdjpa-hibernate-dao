@@ -169,6 +169,27 @@ class DaoIntegrationTest {
     }
 
     @Test
+    void testFindBookByTitle() {
+        Book book = new Book();
+        book.setIsbn("1235" + RandomString.make());
+        book.setTitle("TITLETEST2");
+
+        Book saved = bookDao.saveNewBook(book);
+
+        Book fetched = bookDao.findBookByTitle(book.getTitle());
+        assertThat(fetched).isNotNull();
+
+        bookDao.deleteBookById(saved.getId());
+    }
+
+    @Test
+    void testGetAuthorByNameCriteria() {
+        Author author = authorDao.findAuthorByNameCriteria("Craig", "Walls");
+
+        assertThat(author).isNotNull();
+    }
+
+    @Test
     void testGetAuthorByName() {
         Author author = authorDao.findAuthorByName("Craig", "Walls");
 
