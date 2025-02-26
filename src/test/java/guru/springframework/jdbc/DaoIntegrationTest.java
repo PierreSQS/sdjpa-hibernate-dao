@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -20,13 +19,13 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 /**
- * Created by jt on 8/28/21.
+ * Modified by Pierrot on 26-02-2025.
  */
 @ActiveProfiles("local")
 @DataJpaTest
 @Import({AuthorDaoImpl.class, BookDaoImpl.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class DaoIntegrationTest {
+class DaoIntegrationTest {
     @Autowired
     AuthorDao authorDao;
 
@@ -38,7 +37,7 @@ public class DaoIntegrationTest {
         List<Author> authors = authorDao.findAll();
 
         assertThat(authors).isNotNull();
-        assertThat(authors.size()).isGreaterThan(0);
+        assertThat(authors.size()).isNotZero();
     }
 
     @Test
@@ -49,7 +48,7 @@ public class DaoIntegrationTest {
 
         Book saved = bookDao.saveNewBook(book);
 
-        Book fetched = bookDao.findByISBN(book.getIsbn());
+        Book fetched = bookDao.findByISBN(saved.getIsbn());
         assertThat(fetched).isNotNull();
     }
 
@@ -58,7 +57,7 @@ public class DaoIntegrationTest {
         List<Author> authors = authorDao.listAuthorByLastNameLike("Wall");
 
         assertThat(authors).isNotNull();
-        assertThat(authors.size()).isGreaterThan(0);
+        assertThat(authors.size()).isNotZero();
     }
 
     @Test
@@ -148,7 +147,7 @@ public class DaoIntegrationTest {
         Author deleted = authorDao.getById(saved.getId());
         assertThat(deleted).isNull();
 
-        assertThat(authorDao.getById(saved.getId()));
+        assertThat(authorDao.getById(saved.getId())).isNull();
 
     }
 
@@ -182,14 +181,14 @@ public class DaoIntegrationTest {
         List<Book> books = bookDao.findAll();
 
         assertThat(books).isNotNull();
-        assertThat(books.size()).isGreaterThan(0);
+        assertThat(books.size()).isNotZero();
     }
 
     @Test
     void testFindBookByTitle() {
         Book book = new Book();
         book.setIsbn("1235" + RandomString.make());
-        book.setTitle("TITLETEST2");
+        book.setTitle("TITLE TEST2");
 
         Book saved = bookDao.saveNewBook(book);
 

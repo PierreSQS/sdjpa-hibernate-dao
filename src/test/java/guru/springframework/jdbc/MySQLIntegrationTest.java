@@ -10,10 +10,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+/**
+ * Modified by Pierrot on 26-02-2025.
+ */
 @ActiveProfiles("local")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class MySQLIntegrationTest {
+class MySQLIntegrationTest {
 
     @Autowired
     BookRepository bookRepository;
@@ -21,7 +24,7 @@ public class MySQLIntegrationTest {
     @Test
     void testMySQL() {
         long countBefore = bookRepository.count();
-        assertThat(countBefore).isGreaterThan(0);
+        assertThat(countBefore).isPositive();
     }
 
 }
