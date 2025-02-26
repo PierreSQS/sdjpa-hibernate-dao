@@ -10,7 +10,7 @@ import jakarta.persistence.criteria.*;
 import java.util.List;
 
 /**
- * Created by jt on 8/29/21.
+ * Modified by Pierrot on 26-02-2025.
  */
 @Component
 public class BookDaoImpl implements BookDao {
@@ -53,21 +53,16 @@ public class BookDaoImpl implements BookDao {
     public Book findBookByTitleCriteria(String title) {
 
         try (EntityManager em = getEntityManager()) {
-            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-            CriteriaQuery<Book> criteriaQuery = criteriaBuilder.createQuery(Book.class);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Book> cq = cb.createQuery(Book.class);
+            Root<Book> root = cq.from(Book.class);
 
-            Root<Book> root = criteriaQuery.from(Book.class);
+            cq.select(root).where(cb.equal(root.get("title"), title));
 
-            ParameterExpression<String> titleParam = criteriaBuilder.parameter(String.class);
+            TypedQuery<Book> query = em.createQuery(cq);
+            query.setParameter("title", title);
 
-            Predicate titlePredicate = criteriaBuilder.equal(root.get("title"), titleParam);
-
-            criteriaQuery.select(root).where(titlePredicate);
-
-            TypedQuery<Book> typedQuery = em.createQuery(criteriaQuery);
-            typedQuery.setParameter(titleParam, title);
-
-            return typedQuery.getSingleResult();
+            return query.getSingleResult();
         }
     }
 

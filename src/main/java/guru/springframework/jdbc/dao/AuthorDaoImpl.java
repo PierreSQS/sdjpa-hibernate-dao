@@ -11,7 +11,7 @@ import jakarta.persistence.criteria.*;
 import java.util.List;
 
 /**
- * Created by jt on 8/28/21.
+ * Modified by Pierrot on 26-02-2025.
  */
 @Component
 public class AuthorDaoImpl implements AuthorDao {
@@ -68,24 +68,17 @@ public class AuthorDaoImpl implements AuthorDao {
     public Author findAuthorByNameCriteria(String firstName, String lastName) {
 
         try (EntityManager em = getEntityManager()) {
-            CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-            CriteriaQuery<Author> criteriaQuery = criteriaBuilder.createQuery(Author.class);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Author> cq = cb.createQuery(Author.class);
+            Root<Author> root = cq.from(Author.class);
 
-            Root<Author> root = criteriaQuery.from(Author.class);
+            Predicate firstNamePred = cb.equal(root.get("firstName"), firstName);
+            Predicate lastNamePred = cb.equal(root.get("lastName"), lastName);
 
-            ParameterExpression<String> firstNameParam = criteriaBuilder.parameter(String.class);
-            ParameterExpression<String> lastNameParam = criteriaBuilder.parameter(String.class);
+            cq.select(root).where(cb.and(firstNamePred, lastNamePred));
 
-            Predicate firstNamePred = criteriaBuilder.equal(root.get("firstName"), firstNameParam);
-            Predicate lastNamePred = criteriaBuilder.equal(root.get("lastName"), lastNameParam);
-
-            criteriaQuery.select(root).where(criteriaBuilder.and(firstNamePred, lastNamePred));
-
-            TypedQuery<Author> typedQuery = em.createQuery(criteriaQuery);
-            typedQuery.setParameter(firstNameParam, firstName);
-            typedQuery.setParameter(lastNameParam, lastName);
-
-            return typedQuery.getSingleResult();
+            TypedQuery<Author> query = em.createQuery(cq);
+            return query.getSingleResult();
         }
     }
 
