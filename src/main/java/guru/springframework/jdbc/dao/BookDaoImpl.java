@@ -59,7 +59,7 @@ public class BookDaoImpl implements BookDao {
 
             cq.select(root).where(cb.equal(root.get("title"), title));
 
-            TypedQuery<Book> query = em.createQuery(cq);
+            TypedQuery<Book> query = em.createNamedQuery("find_by_title", Book.class);
             query.setParameter("title", title);
 
             return query.getSingleResult();
