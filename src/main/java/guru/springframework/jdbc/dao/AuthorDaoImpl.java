@@ -24,29 +24,21 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public List<Author> findAll() {
-        EntityManager em = getEntityManager();
 
-        try{
+        try (EntityManager em = getEntityManager()) {
             TypedQuery<Author> typedQuery = em.createNamedQuery("author_find_all", Author.class);
 
             return typedQuery.getResultList();
-        } finally {
-            em.close();
         }
     }
 
     @Override
     public List<Author> listAuthorByLastNameLike(String lastName) {
-        EntityManager em = getEntityManager();
 
-        try {
+        try (EntityManager em = getEntityManager()) {
             Query query = em.createQuery("SELECT a from Author a where a.lastName like :last_name");
             query.setParameter("last_name", lastName + "%");
-            List<Author> authors = query.getResultList();
-
-            return authors;
-        } finally {
-            em.close();
+            return query.getResultList();
         }
     }
 
@@ -74,9 +66,8 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author findAuthorByNameCriteria(String firstName, String lastName) {
-        EntityManager em = getEntityManager();
 
-        try {
+        try (EntityManager em = getEntityManager()) {
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery<Author> criteriaQuery = criteriaBuilder.createQuery(Author.class);
 
@@ -95,8 +86,6 @@ public class AuthorDaoImpl implements AuthorDao {
             typedQuery.setParameter(lastNameParam, lastName);
 
             return typedQuery.getSingleResult();
-        } finally {
-            em.close();
         }
     }
 
@@ -113,17 +102,13 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author updateAuthor(Author author) {
-        EntityManager em = getEntityManager();
 
-        try {
+        try (EntityManager em = getEntityManager()) {
             em.joinTransaction();
             em.merge(author);
             em.flush();
             em.clear();
-            Author saveAuthor = em.find(Author.class, author.getId());
-            return saveAuthor;
-        } finally {
-            em.close();
+            return em.find(Author.class, author.getId());
         }
     }
 

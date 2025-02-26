@@ -22,16 +22,12 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book findByISBN(String isbn) {
-        EntityManager em = getEntityManager();
 
-        try {
+        try (EntityManager em = getEntityManager()) {
             TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.isbn = :isbn", Book.class);
             query.setParameter("isbn", isbn);
 
-            Book book = query.getSingleResult();
-            return book;
-        } finally {
-            em.close();
+            return query.getSingleResult();
         }
     }
 
@@ -45,23 +41,18 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book findBookByTitle(String title) {
-        EntityManager em = getEntityManager();
 
-        try{
+        try (EntityManager em = getEntityManager()) {
             TypedQuery<Book> query = em.createNamedQuery("find_by_title", Book.class);
             query.setParameter("title", title);
-            Book book = query.getSingleResult();
-            return book;
-        } finally {
-            em.close();
+            return query.getSingleResult();
         }
     }
 
     @Override
     public Book findBookByTitleCriteria(String title) {
-        EntityManager em = getEntityManager();
 
-        try {
+        try (EntityManager em = getEntityManager()) {
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             CriteriaQuery<Book> criteriaQuery = criteriaBuilder.createQuery(Book.class);
 
@@ -77,8 +68,6 @@ public class BookDaoImpl implements BookDao {
             typedQuery.setParameter(titleParam, title);
 
             return typedQuery.getSingleResult();
-        } finally {
-            em.close();;
         }
     }
 
@@ -118,14 +107,11 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public List<Book> findAll() {
-        EntityManager em = getEntityManager();
 
-        try {
+        try (EntityManager em = getEntityManager()) {
             TypedQuery<Book> query = em.createNamedQuery("find_all_books", Book.class);
 
             return query.getResultList();
-        } finally {
-            em.close();
         }
     }
 
