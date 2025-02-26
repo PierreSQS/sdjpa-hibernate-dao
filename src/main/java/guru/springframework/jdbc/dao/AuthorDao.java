@@ -5,7 +5,7 @@ import guru.springframework.jdbc.domain.Author;
 import java.util.List;
 
 /**
- * Created by jt on 8/22/21.
+ * Modified by Pierrot on 26-02-2025.
  */
 public interface AuthorDao {
     List<Author> findAll();
@@ -23,4 +23,6 @@ public interface AuthorDao {
     void deleteAuthorById(Long id);
 
     Author findAuthorByNameCriteria(String craig, String walls);
+
+    Author findAuthorByNameNative(String firstName, String lastName);
 }
